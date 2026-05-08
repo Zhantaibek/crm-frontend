@@ -1,9 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
 import { productsApi } from '@/api/products.api';
 import { ProductCard } from '@/components/features/ProductCard';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { getCategoryByName } from '@/utils/emoji';
 
 export const HomePage = () => {
+  const navigate = useNavigate();
   const { data: products } = useQuery({
     queryKey: ['products'],
     queryFn: productsApi.getAll,
@@ -94,34 +96,31 @@ export const HomePage = () => {
             <h2 className="section-title">Категории товаров</h2>
           </div>
           <div className="categories__grid">
-            <div className="cat-card cat-card--large">
-              <div className="cat-card__emoji">🥗</div>
-              <h3>Эко-питание</h3>
-              <p>Органические продукты, суперфуды, натуральные сладости</p>
-              <span className="cat-card__count">430 товаров</span>
-              <span className="cat-card__arrow">→</span>
-            </div>
-            <div className="cat-card">
-              <div className="cat-card__emoji">🧴</div>
-              <h3>Косметика</h3>
-              <p>Натуральный уход без химии</p>
-              <span className="cat-card__count">280 товаров</span>
-              <span className="cat-card__arrow">→</span>
-            </div>
-            <div className="cat-card">
-              <div className="cat-card__emoji">🏡</div>
-              <h3>Дом и быт</h3>
-              <p>Эко-средства для уборки и быта</p>
-              <span className="cat-card__count">310 товаров</span>
-              <span className="cat-card__arrow">→</span>
-            </div>
-            <div className="cat-card">
-              <div className="cat-card__emoji">🌱</div>
-              <h3>Растения и сад</h3>
-              <p>Семена, удобрения, грунт</p>
-              <span className="cat-card__count">180 товаров</span>
-              <span className="cat-card__arrow">→</span>
-            </div>
+            {[
+              { emoji: '🥗', title: 'Эко-питание', desc: 'Органические продукты, суперфуды, натуральные сладости', cat: 'Питание' },
+              { emoji: '🧴', title: 'Косметика', desc: 'Натуральный уход без химии', cat: 'Косметика' },
+              { emoji: '🏡', title: 'Дом и быт', desc: 'Эко-средства для уборки и быта', cat: 'Дом' },
+              { emoji: '🌱', title: 'Растения и сад', desc: 'Семена, удобрения, грунт', cat: 'Растения' },
+            ].map((item, i) => {
+              const count = products?.filter(p =>
+                getCategoryByName(p.name.toLowerCase()) === item.cat
+              ).length || 0;
+
+              return (
+                <div
+                  key={item.cat}
+                  className={`cat-card ${i === 0 ? 'cat-card--large' : ''}`}
+                  onClick={() => navigate(`/catalog?cat=${item.cat}`)}
+                  style={{ cursor: 'pointer' }}
+                >
+                  <div className="cat-card__emoji">{item.emoji}</div>
+                  <h3>{item.title}</h3>
+                  <p>{item.desc}</p>
+                  <span className="cat-card__count">{count} товаров</span>
+                  <span className="cat-card__arrow">→</span>
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>

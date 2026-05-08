@@ -1,23 +1,21 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { usePosts } from '@/hooks/usePosts';
+import type { Post } from '@/types/post.types';
 
 const CATEGORIES = ['Все', 'Питание', 'Косметика', 'Дом', 'Интервью', 'Рецепты'];
 
-const POSTS = [
-  { id: 1, cat: 'Питание', img: 'blog-full-card__img--1', title: '10 суперфудов, которые изменят ваше утро', desc: 'Разбираемся, что такое суперфуды и как их легко ввести в ежедневный рацион без стресса и больших затрат. Чиа, спирулина, ашваганда — объясняем простым языком.', date: '12 апреля 2026', time: '8 мин чтения' },
-  { id: 2, cat: 'Дом', img: 'blog-full-card__img--2', title: 'Чистота без химии: полное руководство по эко-уборке', desc: 'Сода, уксус, лимон и эфирные масла против агрессивной бытовой химии. Проверяем на практике и делимся результатами.', date: '5 апреля 2026', time: '6 мин чтения' },
-  { id: 3, cat: 'Косметика', img: 'blog-full-card__img--3', title: 'Натуральная косметика: мифы и реальность', desc: 'Разбираем главные заблуждения о «натуральном» на этикетке и учимся читать составы правильно.', date: '28 марта 2026', time: '5 мин чтения' },
-  { id: 4, cat: 'Интервью', img: 'blog-full-card__img--4', title: '«Фермерство — это не ностальгия, это будущее»', desc: 'Разговор с Иваном Лесовым о том, как органическое земледелие меняет деревню и почему молодёжь возвращается на землю.', date: '20 марта 2026', time: '10 мин чтения' },
-  { id: 5, cat: 'Рецепты', img: 'blog-full-card__img--5', title: '5 рецептов с суперфудами на каждый день', desc: 'Быстрые и вкусные блюда из наших товаров. Смузи с чиа, каша с годжи, тост с авокадо и многое другое.', date: '15 марта 2026', time: '4 мин чтения' },
-  { id: 6, cat: 'Дом', img: 'blog-full-card__img--6', title: 'Упаковка будущего: как мы отказались от пластика', desc: 'История нашего перехода на биоразлагаемую упаковку. Что сработало, что нет, и как это повлияло на доставку.', date: '8 марта 2026', time: '7 мин чтения' },
-];
+const IMGS = ['blog-full-card__img--1', 'blog-full-card__img--2', 'blog-full-card__img--3',
+              'blog-full-card__img--4', 'blog-full-card__img--5', 'blog-full-card__img--6'];
 
 export const BlogPage = () => {
+  const { data: posts, isLoading } = usePosts();
   const [activeCategory, setActiveCategory] = useState('Все');
+  const [selectedPost, setSelectedPost] = useState<Post | null>(null);
 
   const filtered = activeCategory === 'Все'
-    ? POSTS
-    : POSTS.filter((p) => p.cat === activeCategory);
+    ? posts
+    : posts?.filter((p) => p.category === activeCategory);
 
   return (
     <div>
@@ -45,18 +43,25 @@ export const BlogPage = () => {
             ))}
           </div>
 
+          {isLoading && <div>Загрузка...</div>}
+
           <div className="blog__grid">
-            {filtered.map((post) => (
-              <article className="blog-full-card" key={post.id}>
-                <div className={`blog-full-card__img ${post.img}`}>
-                  <div className="blog-full-card__tag">{post.cat}</div>
+            {filtered?.map((post, i) => (
+              <article
+                key={post.id}
+                className="blog-full-card"
+                onClick={() => setSelectedPost(post)}
+                style={{ cursor: 'pointer' }}
+              >
+                <div className={`blog-full-card__img ${IMGS[i % IMGS.length]}`}>
+                  <div className="blog-full-card__tag">{post.category}</div>
                 </div>
                 <div className="blog-full-card__body">
                   <h3>{post.title}</h3>
-                  <p>{post.desc}</p>
+                  <p>{post.excerpt}</p>
                   <div className="blog-full-card__footer">
-                    <span>{post.date}</span>
-                    <span>{post.time}</span>
+                    <span>{new Date(post.createdAt).toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
+                    <span>{post.readTime}</span>
                   </div>
                 </div>
               </article>
@@ -64,6 +69,63 @@ export const BlogPage = () => {
           </div>
         </div>
       </section>
+
+      {/* MODAL */}
+      {selectedPost && (
+        <div
+          style={{
+            position: 'fixed', inset: 0, zIndex: 1000,
+            background: 'rgba(30,26,21,.6)', backdropFilter: 'blur(8px)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            padding: '24px',
+          }}
+          onClick={() => setSelectedPost(null)}
+        >
+          <div
+            style={{
+              background: 'var(--cream)', borderRadius: 'var(--radius-lg)',
+              padding: '48px', maxWidth: '680px', width: '100%',
+              maxHeight: '80vh', overflowY: 'auto',
+              position: 'relative',
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              onClick={() => setSelectedPost(null)}
+              style={{
+                position: 'absolute', top: '20px', right: '20px',
+                background: 'var(--beige-mid)', border: 'none',
+                width: '36px', height: '36px', borderRadius: '50%',
+                fontSize: '1.2rem', cursor: 'pointer', display: 'flex',
+                alignItems: 'center', justifyContent: 'center',
+              }}
+            >
+              ×
+            </button>
+
+            <div className="section-tag" style={{ marginBottom: '16px', display: 'inline-block' }}>
+              {selectedPost.category}
+            </div>
+
+            <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '1.8rem', fontWeight: 700, marginBottom: '12px', lineHeight: 1.2 }}>
+              {selectedPost.title}
+            </h2>
+
+            <div style={{ display: 'flex', gap: '16px', fontSize: '.8rem', color: 'var(--text-light)', marginBottom: '24px' }}>
+              <span>{new Date(selectedPost.createdAt).toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
+              <span>{selectedPost.readTime}</span>
+            </div>
+
+            <p style={{ color: 'var(--text-mid)', lineHeight: 1.8, fontSize: '1rem', marginBottom: '16px' }}>
+              {selectedPost.excerpt}
+            </p>
+
+            <p style={{ color: 'var(--text)', lineHeight: 1.8, fontSize: '1rem' }}>
+              {selectedPost.content}
+            </p>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

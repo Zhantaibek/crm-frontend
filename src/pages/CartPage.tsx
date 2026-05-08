@@ -32,7 +32,6 @@ export const CartPage = () => {
 
   return (
     <div>
-      {/* PAGE HERO */}
       <div className="page-hero page-hero--cart">
         <div className="container">
           <div className="page-hero__breadcrumb">
@@ -55,28 +54,62 @@ export const CartPage = () => {
             </div>
           ) : (
             <div className="cart__layout">
-              {/* ITEMS */}
-              <div className="cart__items">
-                {items.map((item) => (
-                  <div key={item.id} className="cart-item">
-                    <div className="cart-item__img">
-                      {item.emoji || '🌿'}
+              <div>
+                {/* Заголовок + кнопка очистки */}
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
+                  <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '1.4rem', fontWeight: 700 }}>
+                    Товары
+                  </h2>
+                  <button
+                    onClick={() => { clear(); showToast('Корзина очищена'); }}
+                    style={{
+                      padding: '8px 16px',
+                      borderRadius: '999px',
+                      border: '1px solid var(--beige-dark)',
+                      background: 'white',
+                      color: 'var(--text-mid)',
+                      fontSize: '.82rem',
+                      cursor: 'pointer',
+                      transition: 'all .2s',
+                    }}
+                    onMouseEnter={e => {
+                      e.currentTarget.style.background = '#fff5f5';
+                      e.currentTarget.style.color = '#e74c3c';
+                      e.currentTarget.style.borderColor = '#fdd';
+                    }}
+                    onMouseLeave={e => {
+                      e.currentTarget.style.background = 'white';
+                      e.currentTarget.style.color = 'var(--text-mid)';
+                      e.currentTarget.style.borderColor = 'var(--beige-dark)';
+                    }}
+                  >
+                    🗑 Очистить всё
+                  </button>
+                </div>
+
+                {/* Список товаров */}
+                <div className="cart__items">
+                  {items.map((item) => (
+                    <div key={item.id} className="cart-item">
+                      <div className="cart-item__img">
+                        {item.emoji || '🌿'}
+                      </div>
+                      <div className="cart-item__info">
+                        <div className="cart-item__name">{item.name}</div>
+                        <div className="cart-item__price">{item.price.toLocaleString()} ₽ / шт</div>
+                      </div>
+                      <div className="cart-item__qty">
+                        <button className="qty-btn" onClick={() => changeQty(item.id, -1)}>−</button>
+                        <span className="qty-num">{item.qty}</span>
+                        <button className="qty-btn" onClick={() => changeQty(item.id, 1)}>+</button>
+                      </div>
+                      <div className="cart-item__total">
+                        {(item.price * item.qty).toLocaleString()} ₽
+                      </div>
+                      <button className="cart-item__remove" onClick={() => remove(item.id)}>×</button>
                     </div>
-                    <div className="cart-item__info">
-                      <div className="cart-item__name">{item.name}</div>
-                      <div className="cart-item__price">{item.price.toLocaleString()} ₽ / шт</div>
-                    </div>
-                    <div className="cart-item__qty">
-                      <button className="qty-btn" onClick={() => changeQty(item.id, -1)}>−</button>
-                      <span className="qty-num">{item.qty}</span>
-                      <button className="qty-btn" onClick={() => changeQty(item.id, 1)}>+</button>
-                    </div>
-                    <div className="cart-item__total">
-                      {(item.price * item.qty).toLocaleString()} ₽
-                    </div>
-                    <button className="cart-item__remove" onClick={() => remove(item.id)}>×</button>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
 
               {/* SUMMARY */}
