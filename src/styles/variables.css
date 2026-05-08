@@ -1,0 +1,25 @@
+:root {
+  --green:        #3d6b45;
+  --green-mid:    #5a8a60;
+  --green-light:  #8ab896;
+  --green-pale:   #d4e8d6;
+  --brown:        #6b4c2a;
+  --brown-light:  #a07040;
+  --beige:        #f5efe6;
+  --beige-mid:    #ede4d6;
+  --beige-dark:   #d8c9b5;
+  --cream:        #faf7f2;
+  --dark:         #1e1a15;
+  --dark-mid:     #3a3228;
+  --text:         #2c261e;
+  --text-mid:     #5c5248;
+  --text-light:   #8c8078;
+
+  --radius:       12px;
+  --radius-lg:    20px;
+  --shadow:       0 4px 24px rgba(30,26,21,.08);
+  --shadow-lg:    0 12px 48px rgba(30,26,21,.14);
+
+  --font-display: 'Nunito', sans-serif;
+  --font-body:    'Nunito', sans-serif;
+}
