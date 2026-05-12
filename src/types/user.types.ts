@@ -1,14 +1,15 @@
 export interface User {
-    id : number ,
-    name : string ,
-    email : string ,
-    role : 'user' | 'admin',
-    createdDt : string
+  id: number;
+  name: string;
+  surname: string;
+  email: string;
+  role: 'user' | 'admin';
+  createdAt: string;
 }
 
 export interface UpdateMeDto {
-    name? : string ,
-    email? : string ,
-    password? : string
+  name?: string;
+  surname?: string;
+  email?: string;
+  password?: string;
 }
-

@@ -23,6 +23,7 @@ export const AboutPage = () => {
                 <div className="about-story__img-secondary">🌿</div>
               </div>
             </div>
+            
             <div className="about-story__content">
               <div className="section-tag">Наша история</div>
               <h2 className="section-title">С заботой о людях<br />и планете</h2>

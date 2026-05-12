@@ -12,22 +12,38 @@ export const OrdersPage = () => {
       <div className="admin-table">
         <table>
           <thead>
-            <tr><th>ID</th><th>Пользователь</th><th>Товары</th><th>Дата</th><th></th></tr>
+            <tr><th>ID</th><th>Пользователь</th><th>Товары</th><th>Сумма</th><th>Дата</th><th></th></tr>
           </thead>
           <tbody>
-            {orders?.map((o) => (
-              <tr key={o.id}>
-                <td>{o.id}</td>
-                <td>{o.userId}</td>
-                <td>{o.products.map((p) => p.product.name).join(', ')}</td>
-                <td>{new Date(o.createAt).toLocaleDateString('ru-RU')}</td>
-                <td>
-                  <button className="btn btn--ghost" onClick={() => deleteMutation.mutate(o.id)} disabled={deleteMutation.isPending}>
-                    Удалить
-                  </button>
-                </td>
-              </tr>
-            ))}
+            {orders?.map((o) => {
+              const sum = o.products.reduce((s, p) => s + Number(p.product.price), 0);
+              return (
+                <tr key={o.id}>
+                  <td style={{ color: 'var(--text-light)' }}>#{o.id}</td>
+                  <td style={{ fontWeight: 500 }}>#{o.userId}</td>
+                  <td style={{ color: 'var(--text-mid)', maxWidth: '240px' }}>
+                    {o.products.map((p) => p.product.name).join(', ')}
+                  </td>
+                  <td style={{ fontWeight: 600, color: 'var(--green)' }}>
+                    {sum.toLocaleString()} ₽
+                  </td>
+                  <td style={{ color: 'var(--text-light)' }}>{new Date(o.createAt).toLocaleDateString('ru-RU')}</td>
+                  <td>
+                    <button
+                      onClick={() => deleteMutation.mutate(o.id)}
+                      disabled={deleteMutation.isPending}
+                      style={{
+                        padding: '6px 14px', borderRadius: '999px',
+                        border: '1px solid #fdd', background: '#fff5f5',
+                        color: '#e74c3c', fontSize: '.78rem', cursor: 'pointer',
+                      }}
+                    >
+                      Удалить
+                    </button>
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>

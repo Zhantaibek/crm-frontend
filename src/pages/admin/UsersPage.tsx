@@ -17,13 +17,25 @@ export const UsersPage = () => {
           <tbody>
             {Array.isArray(users) && users.map((u) => (
               <tr key={u.id}>
-                <td>{u.id}</td>
-                <td>{u.name}</td>
+                <td style={{ color: 'var(--text-light)' }}>#{u.id}</td>
+                <td style={{ fontWeight: 500 }}>{u.name}</td>
                 <td>{u.email}</td>
-                <td>{u.role}</td>
-                <td>{new Date(u.createdAt).toLocaleDateString('ru-RU')}</td>
                 <td>
-                  <button className="btn btn--ghost" onClick={() => deleteMutation.mutate(u.id)} disabled={deleteMutation.isPending}>
+                  <span className={`admin-badge ${u.role === 'admin' ? 'admin-badge--admin' : 'admin-badge--user'}`}>
+                    {u.role}
+                  </span>
+                </td>
+                <td style={{ color: 'var(--text-light)' }}>{new Date(u.createdAt).toLocaleDateString('ru-RU')}</td>
+                <td>
+                  <button
+                    onClick={() => deleteMutation.mutate(u.id)}
+                    disabled={deleteMutation.isPending}
+                    style={{
+                      padding: '6px 14px', borderRadius: '999px',
+                      border: '1px solid #fdd', background: '#fff5f5',
+                      color: '#e74c3c', fontSize: '.78rem', cursor: 'pointer',
+                    }}
+                  >
                     Удалить
                   </button>
                 </td>

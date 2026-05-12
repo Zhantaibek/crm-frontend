@@ -1,23 +1,24 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { useToastContext } from '@/App';
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import { useToastContext } from "@/App";
+import { FaVk, FaTelegramPlane, FaWhatsapp } from "react-icons/fa";
 
 export const ContactsPage = () => {
   const { showToast } = useToastContext();
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [topic, setTopic] = useState('Вопрос о товаре');
-  const [message, setMessage] = useState('');
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [topic, setTopic] = useState("Вопрос о товаре");
+  const [message, setMessage] = useState("");
 
   const handleSubmit = () => {
     if (!name || !email || !message) {
-      showToast('Заполните все поля');
+      showToast("Заполните все поля");
       return;
     }
-    showToast('Сообщение отправлено! ✅');
-    setName('');
-    setEmail('');
-    setMessage('');
+    showToast("Сообщение отправлено! ✅");
+    setName("");
+    setEmail("");
+    setMessage("");
   };
 
   return (
@@ -36,13 +37,40 @@ export const ContactsPage = () => {
           <div className="contacts__layout">
             <div className="contacts__info">
               <h2>Мы всегда на связи</h2>
-              <p>Есть вопрос о товаре, доставке или сотрудничестве? Напишите нам — ответим в течение нескольких часов.</p>
+              <p>
+                Есть вопрос о товаре, доставке или сотрудничестве? Напишите нам
+                — ответим в течение нескольких часов.
+              </p>
 
               {[
-                { icon: '📧', label: 'Email', content: <a href="mailto:hello@zemlyanova.ru">hello@zemlyanova.ru</a> },
-                { icon: '📞', label: 'Телефон', content: <a href="tel:+74951234567">+7 (495) 123-45-67</a> },
-                { icon: '🕐', label: 'Режим работы', content: <span>Пн–Пт: 9:00 – 20:00<br />Сб–Вс: 10:00 – 18:00</span> },
-                { icon: '📍', label: 'Пункт выдачи', content: <span>Москва, ул. Органическая, 7</span> },
+                {
+                  icon: "📧",
+                  label: "Email",
+                  content: (
+                    <a href="mailto:hello@zemlyanova.ru">hello@zemlyanova.ru</a>
+                  ),
+                },
+                {
+                  icon: "📞",
+                  label: "Телефон",
+                  content: <a href="tel:+74951234567">+7 (495) 123-45-67</a>,
+                },
+                {
+                  icon: "🕐",
+                  label: "Режим работы",
+                  content: (
+                    <span>
+                      Пн–Пт: 9:00 – 20:00
+                      <br />
+                      Сб–Вс: 10:00 – 18:00
+                    </span>
+                  ),
+                },
+                {
+                  icon: "📍",
+                  label: "Пункт выдачи",
+                  content: <span>Красноярск, ул. Борисова, 24</span>,
+                },
               ].map((item) => (
                 <div className="contact-item" key={item.label}>
                   <div className="contact-item__icon">{item.icon}</div>
@@ -54,9 +82,17 @@ export const ContactsPage = () => {
               ))}
 
               <div className="contacts__social">
-                <a href="#" className="social-btn">VK</a>
-                <a href="#" className="social-btn">TG</a>
-                <a href="#" className="social-btn">WA</a>
+                <a href="https://vk.com" target="_blank">
+                  <FaVk size={24} />
+                </a>
+
+                <a href="https://t.me" target="_blank">
+                  <FaTelegramPlane size={24} />
+                </a>
+
+                <a href="https://wa.me" target="_blank">
+                  <FaWhatsapp size={24} />
+                </a>
               </div>
             </div>
 
@@ -105,7 +141,10 @@ export const ContactsPage = () => {
                     onChange={(e) => setMessage(e.target.value)}
                   />
                 </div>
-                <button className="btn btn--primary btn--full" onClick={handleSubmit}>
+                <button
+                  className="btn btn--primary btn--full"
+                  onClick={handleSubmit}
+                >
                   Отправить
                 </button>
               </div>

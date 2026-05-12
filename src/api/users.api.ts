@@ -7,7 +7,7 @@ export const usersApi = {
         return res.data.data
     },
     updateMe : async(data : UpdateMeDto) : Promise <User> => {
-        const res = await client.post ('/users/me', data)
+        const res = await client.patch ('/users/me', data)
         return res.data.data
     },
     getAll : async () : Promise <User> => {
